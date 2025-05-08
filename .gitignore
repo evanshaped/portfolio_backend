@@ -1,3 +1,4 @@
 *.pyc
 __pycache__/
 portfolio-backend-env/
+*.sqlite3
