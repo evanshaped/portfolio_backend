@@ -14,7 +14,7 @@ class CorpusSerializer(serializers.ModelSerializer):
 class IdiomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Idiom
-        fields = ['text']
+        fields = ['text', 'language']
 
 class RegexSerializer(serializers.ModelSerializer):
     class Meta:
