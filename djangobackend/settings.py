@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-#f(5v_j2mi)3z-3e=xw_ytad_7mpjp^^1=$z*guovy=z+u4s0="
+# SECRET_KEY = "django-insecure-#f(5v_j2mi)3z-3e=xw_ytad_7mpjp^^1=$z*guovy=z+u4s0="
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -84,11 +88,11 @@ DATABASES = {
     # }
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "portfolio_db",
-        "USER": "postgres_user",
-        "PASSWORD": "your_password",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
 }
 
@@ -135,11 +139,22 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
+    # "http://localhost:5173",
+    "http://localhost:8080",   # nginx hosted on 8080
+    "https://idiomstats.com",
+    "https://www.idiomstats.com",
 ]
 
 #CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    # "http://localhost:5173",
+    "http://localhost:8080",
+    "https://idiomstats.com",
+    "https://www.idiomstats.com",
+]
 
 # CORS_ALLOW_HEADERS = [
 #     'X-Custom-Header',
