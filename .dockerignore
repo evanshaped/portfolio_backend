@@ -1,0 +1,16 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+*.pyc
+__pycache__/
+*.sqlite3
+
+# Virtual Environment
+portfolio-backend-env/
+
+# Media and static files
+media/
+static/
