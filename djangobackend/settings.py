@@ -12,9 +12,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,14 +29,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = "django-insecure-#f(5v_j2mi)3z-3e=xw_ytad_7mpjp^^1=$z*guovy=z+u4s0="
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('DJANGO_SECRET_KEY')   # From .env
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = env('DEBUG')   # From .env
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = 'localhost,127.0.0.1,idiomstats.com,www.idiomstats.com'.split(',')
 
 
 # Application definition
@@ -88,11 +95,11 @@ DATABASES = {
     # }
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
+        "NAME": env("DB_NAME"),   # From .env
+        "USER": env("DB_USER"),   # From .env
+        "PASSWORD": env("DB_PASSWORD"),   # From .env
+        "HOST": os.environ.get("DB_HOST", "localhost"),   # From docker compose
+        "PORT": env("DB_PORT"),   # From .env
     }
 }
 
@@ -134,7 +141,7 @@ USE_TZ = True
 # STATIC_URL: URL prefix to construct request URLs for static files
 STATIC_URL = "/static/"
 # STATIC_ROOT: Absolute *file system* path where the static files will be collected
-STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(BASE_DIR, 'static'))
+STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(BASE_DIR, 'static'))   # From docker compose
 
 # Media files
 # MEDIA_URL = '/media/'
