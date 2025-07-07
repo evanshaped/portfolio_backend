@@ -15,4 +15,8 @@ portfolio-backend-env/
 media/
 static/
 
+# In backend, .env contains sensitive info
+# It should not be build into the docker image. It should be read at runtime
 .env
+*.env
+*.env.*
