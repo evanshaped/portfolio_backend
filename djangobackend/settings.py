@@ -200,7 +200,7 @@ STATIC_ROOT = os.environ.get("STATIC_ROOT", os.path.join(BASE_DIR, 'static'))
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:5173",
+    "http://localhost:5173",
     "http://localhost:8080",   # nginx hosted on 8080
     "https://idiomstats.com",
     "https://www.idiomstats.com",
@@ -211,7 +211,7 @@ CORS_ALLOWED_ORIGINS = [
 # CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    # "http://localhost:5173",
+    "http://localhost:5173",
     "http://localhost:8080",
     "https://idiomstats.com",
     "https://www.idiomstats.com",
