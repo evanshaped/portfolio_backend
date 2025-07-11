@@ -29,17 +29,8 @@ class IdiomViewSet(viewsets.ModelViewSet):
 
         language_text = random_idiom.language.name if random_idiom.language else "unknown"
 
-        related_regex = Regex.objects.filter(idiom=random_idiom).order_by("whenAdded").first()
-        regex_text = related_regex.text if related_regex else "No regex implemented yet"
-
         return Response({
             "idiomText": random_idiom.text,
             "languageText": language_text,
             "definitionText": "Definition not yet implemented",
-            "regexText": regex_text,
         })
-
-
-class RegexViewSet(viewsets.ModelViewSet):
-    queryset = Regex.objects.all().order_by('whenAdded')
-    serializer_class = RegexSerializer

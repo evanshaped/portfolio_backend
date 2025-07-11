@@ -17,14 +17,6 @@ class Idiom(models.Model):
     def __str__(self):
         return f"{self.text}"
 
-class Regex(models.Model):
-    text = models.TextField()
-    idiom = models.ForeignKey(Idiom, on_delete=models.CASCADE)
-    whenAdded = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Regex is {self.text} for idiom {self.idiom}"
-
 class Corpus(models.Model):
     name = models.CharField(max_length=100)
     text = models.TextField()

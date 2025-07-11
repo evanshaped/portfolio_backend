@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Idiom, Language, Corpus, Regex
+from .models import Idiom, Language, Corpus
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,8 +15,3 @@ class IdiomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Idiom
         fields = ['text', 'language']
-
-class RegexSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Regex
-        fields = ['text', 'idiom', 'whenAdded']

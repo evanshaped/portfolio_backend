@@ -30,7 +30,6 @@ idioms_router = routers.DefaultRouter()
 idioms_router.register(r'languages', idioms.views.LanguageViewSet)
 idioms_router.register(r'corpora', idioms.views.CorpusViewSet)
 idioms_router.register(r'idioms', idioms.views.IdiomViewSet)
-idioms_router.register(r'regexes', idioms.views.RegexViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
