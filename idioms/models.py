@@ -8,7 +8,7 @@ class Language(models.Model):
 
 def get_default_language():
     lang, created = Language.objects.get_or_create(name='English (US)')
-    return lang.id
+    return lang.id   # type: ignore (pylance is complaining that Langauge.id is not recognized)
 
 class Idiom(models.Model):
     text = models.TextField()
@@ -20,9 +20,11 @@ class Idiom(models.Model):
 
 class Corpus(models.Model):
     name = models.CharField(max_length=100)
-    text = models.TextField()
+    chunks_directory = models.CharField(max_length=255)
+    total_chunks = models.IntegerField()
+    chunk_size_mb = models.IntegerField()
     language = models.ForeignKey(Language, on_delete=models.SET_DEFAULT, default=get_default_language)
-    wordCount = models.IntegerField()
+    total_word_count = models.IntegerField()
     description = models.TextField()
 
     def __str__(self):

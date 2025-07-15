@@ -11,7 +11,7 @@ class LanguageViewSet(viewsets.ModelViewSet):
     serializer_class = LanguageSerializer
 
 class CorpusViewSet(viewsets.ModelViewSet):
-    queryset = Corpus.objects.all().order_by('wordCount')
+    queryset = Corpus.objects.all().order_by('total_word_count')
     serializer_class = CorpusSerializer
 
 class IdiomViewSet(viewsets.ModelViewSet):
