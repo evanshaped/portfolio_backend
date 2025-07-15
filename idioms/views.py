@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
+from .services.corpus_validation import validate_corpus_chunks
+from .services.corpus_search import search_corpus_chunks_for_pattern
 from .models import *
 from .serializer import *
 import random
+import threading
 
 class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all().order_by('name')
@@ -43,3 +46,36 @@ class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
 class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchFailure.objects.all().order_by('created_at')
     serializer_class = SearchFailureSerializer
+
+@api_view(['POST'])
+def start_search(request):
+    idiom_pattern = request.data.get('idiom_pattern')
+    if not idiom_pattern:
+        return Response({'error': 'Pattern required'}, status=400)
+    
+    corpus_id = request.data.get('corpus_id')
+    if not corpus_id:
+        return Response({'error': 'Corpus ID required'}, status=400)
+    try:
+        corpus = Corpus.objects.get(id=corpus_id)
+    except Corpus.DoesNotExist:
+        return Response({'error': f'Corpus {corpus_id} not found'}, status=404)
+
+    try:
+        validate_corpus_chunks(corpus)
+    except Exception as e:
+        return Response({'error': e}, status=400)
+    
+    search = SearchSession.objects.create(
+        corpus=corpus, 
+        idiom_pattern=idiom_pattern
+    )
+
+    thread = threading.Thread(
+        target=search_corpus_chunks_for_pattern,
+        args=(search.search_id,),
+    )
+    thread.daemon = True
+    thread.start()
+
+    return Response({'search_id': str(search.search_id)})

@@ -11,4 +11,5 @@ idioms_router.register(r'searchfailures', views.SearchFailureViewSet)
 
 urlpatterns = [
     path('', include(idioms_router.urls)),
+    path('start_search/', views.start_search, name='start_search'),
 ]
