@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 class Language(models.Model):
@@ -29,3 +30,26 @@ class Corpus(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+class SearchSession(models.Model):
+    search_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    corpus = models.ForeignKey(Corpus, on_delete=models.CASCADE)
+    #idiom = models.ForeignKey(Idiom, on_delete=models.CASCADE)
+    idiom_pattern = models.CharField(max_length=30)
+    is_completed = models.BooleanField(default=False)
+    failed_chunks = models.IntegerField(default=0)
+    completed_chunks = models.IntegerField(default=0)
+    total_matches = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.search_id} ({self.idiom_pattern} in {self.corpus.name})"
+
+class SearchFailure(models.Model):
+    searchsession = models.ForeignKey(SearchSession, on_delete=models.CASCADE)
+    chunk_name = models.CharField(max_length=50)
+    failure_message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Corpus {self.searchsession.corpus.name}, chunk {self.chunk_name}"

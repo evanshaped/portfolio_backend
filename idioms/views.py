@@ -35,3 +35,11 @@ class IdiomViewSet(viewsets.ModelViewSet):
             "definitionText": "Definition not yet implemented",
             "regexText": random_idiom.regex if random_idiom.regex else "Regex not yet implemented",
         })
+
+class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = SearchSession.objects.all().order_by('created_at')
+    serializer_class = SearchSessionSerializer
+
+class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = SearchFailure.objects.all().order_by('created_at')
+    serializer_class = SearchFailureSerializer
