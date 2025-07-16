@@ -7,3 +7,7 @@
 __pycache__/
 portfolio-backend-env/
 *.sqlite3
+
+# Dev-side corpora
+corpora
+corpora/
