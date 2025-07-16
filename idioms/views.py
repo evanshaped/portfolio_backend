@@ -25,7 +25,7 @@ class IdiomViewSet(viewsets.ModelViewSet):
     def random(self, request):
         idiom_count = Idiom.objects.count()
         if idiom_count == 0:
-            return Response({'error': 'No idioms found'}, status=404)
+            return Response({'error': 'No idioms found'}, status=400)
 
         random_index = random.randint(0, idiom_count - 1)
         random_idiom = Idiom.objects.all()[random_index]
@@ -49,17 +49,20 @@ class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
 
 @api_view(['POST'])
 def start_search(request):
-    idiom_pattern = request.data.get('idiom_pattern')
-    if not idiom_pattern:
+    try:
+        idiom_pattern = request.data.get('idiom_pattern')
+    except KeyError:
         return Response({'error': 'Pattern required'}, status=400)
     
-    corpus_id = request.data.get('corpus_id')
-    if not corpus_id:
+    try:
+        corpus_id = request.data.get('corpus_id')
+    except KeyError:
         return Response({'error': 'Corpus ID required'}, status=400)
+    
     try:
         corpus = Corpus.objects.get(id=corpus_id)
     except Corpus.DoesNotExist:
-        return Response({'error': f'Corpus {corpus_id} not found'}, status=404)
+        return Response({'error': f'Corpus {corpus_id} not found'}, status=400)
 
     try:
         validate_corpus_chunks(corpus)
