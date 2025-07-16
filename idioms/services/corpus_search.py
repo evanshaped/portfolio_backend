@@ -3,13 +3,13 @@ import re
 from ..models import SearchSession, Corpus, SearchFailure
 
 def search_corpus_chunks_for_pattern(search_id):
-    search = SearchSession.objects.get(id=search_id)
-    chunks_directory = search.corpus.chunks_directory
+    search = SearchSession.objects.get(search_id=search_id)
+    chunks_path = search.corpus.get_chunks_path()
     idiom_pattern = search.idiom_pattern
 
-    for chunk_file_name in os.listdir(chunks_directory):
+    for chunk_file_name in os.listdir(chunks_path):
         try:
-            chunk_path = os.path.join(chunks_directory, chunk_file_name)
+            chunk_path = os.path.join(chunks_path, chunk_file_name)
             chunk_matches = 0
             with open(chunk_path, 'r', encoding='utf-8') as chunk_f:
                 content = chunk_f.read()

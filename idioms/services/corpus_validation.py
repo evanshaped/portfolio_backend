@@ -2,14 +2,14 @@ from ..models import Corpus
 import os
 
 def validate_corpus_chunks(corpus: Corpus, size_tolerance = 0.01):
-    chunks_directory = corpus.chunks_directory
+    chunks_path = corpus.get_chunks_path()
     total_chunks = corpus.total_chunks
     max_chunk_size_mb = corpus.chunk_size_mb * (1 + size_tolerance)
-    if not os.path.exists(chunks_directory):
-        raise Exception(f"Error validating corpus chunks. Directory {chunks_directory} does not exist")
+    if not os.path.exists(chunks_path):
+        raise Exception(f"Error validating corpus chunks. Directory {chunks_path} does not exist")
     num_chunks = 0
-    for item in os.listdir(chunks_directory):
-        item_path = os.path.join(chunks_directory, item)
+    for item in os.listdir(chunks_path):
+        item_path = os.path.join(chunks_path, item)
         if not os.path.isfile(item_path):
             raise Exception(f"Error validating corpus chunks. Item {item} is not a file")
         if not str(item).endswith(".txt"):

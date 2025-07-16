@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+import os
+from django.conf import settings
 
 class Language(models.Model):
     name = models.CharField(max_length=100)
@@ -30,6 +32,9 @@ class Corpus(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+    def get_chunks_path(self):
+        return os.path.join(settings.CORPUS_DIR, self.chunks_directory)
 
 class SearchSession(models.Model):
     search_id = models.UUIDField(default=uuid.uuid4, unique=True)
