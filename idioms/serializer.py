@@ -27,7 +27,7 @@ class SearchSessionSerializer(serializers.ModelSerializer):
     total_chunks = serializers.CharField(source='corpus.total_chunks', read_only=True)
     progress = serializers.SerializerMethodField()
     def get_progress(self, obj):
-        return ((obj.completed_chunks + obj.failed_chunks) / obj.total_chunks)
+        return ((obj.completed_chunks + obj.failed_chunks) / obj.corpus.total_chunks)
     class Meta:
         model = SearchSession
         fields = [
