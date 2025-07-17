@@ -42,6 +42,8 @@ class IdiomViewSet(viewsets.ModelViewSet):
 class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchSession.objects.all().order_by('created_at')
     serializer_class = SearchSessionSerializer
+    lookup_field = 'search_id'
+    lookup_url_kwarg = 'search_id'
 
 class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchFailure.objects.all().order_by('created_at')
