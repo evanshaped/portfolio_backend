@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from .services.corpus_validation import validate_corpus_chunks
 from .services.corpus_search import search_corpus_chunks_for_pattern
@@ -21,7 +21,7 @@ class IdiomViewSet(viewsets.ModelViewSet):
     queryset = Idiom.objects.all().order_by('text')
     serializer_class = IdiomSerializer
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
     def random(self, request):
         idiom_count = Idiom.objects.count()
         if idiom_count == 0:
@@ -50,6 +50,7 @@ class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SearchFailureSerializer
 
 @api_view(['POST'])
+@permission_classes([permissions.AllowAny])
 def start_search(request):
     try:
         idiom_pattern = request.data.get('idiom_pattern')
