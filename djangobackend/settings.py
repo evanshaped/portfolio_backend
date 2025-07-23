@@ -16,6 +16,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Django Rest Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -230,3 +236,5 @@ CSRF_TRUSTED_ORIGINS = [
 #     SECURE_HSTS_SECONDS = 31536000  # 1 year
 #     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 #     SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CORPUS_DIR = os.path.join(BASE_DIR, "corpora/")

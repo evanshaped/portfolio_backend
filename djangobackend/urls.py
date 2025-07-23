@@ -26,14 +26,9 @@ core_router.register(r'jobs', core.views.JobViewSet)
 core_router.register(r'projects', core.views.ProjectViewSet)
 core_router.register(r'technologies', core.views.TechnologyViewSet)
 
-idioms_router = routers.DefaultRouter()
-idioms_router.register(r'languages', idioms.views.LanguageViewSet)
-idioms_router.register(r'corpora', idioms.views.CorpusViewSet)
-idioms_router.register(r'idioms', idioms.views.IdiomViewSet)
-idioms_router.register(r'regexes', idioms.views.RegexViewSet)
-
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("core-api/", include(core_router.urls)),
-    path("idioms-api/", include(idioms_router.urls)),
+    path("core-api/", include("core.urls")),
+    path("idioms-api/", include("idioms.urls")),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
