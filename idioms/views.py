@@ -36,7 +36,7 @@ class IdiomViewSet(viewsets.ModelViewSet):
             "idiomText": random_idiom.text,
             "languageText": language_text,
             "definitionText": "Definition not yet implemented",
-            "regexText": random_idiom.regex if random_idiom.regex else "Regex not yet implemented",
+            "regexText": random_idiom.regex if random_idiom.regex else "",
         })
 
 class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
