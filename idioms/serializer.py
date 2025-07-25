@@ -32,7 +32,7 @@ class SearchSessionSerializer(serializers.ModelSerializer):
         model = SearchSession
         fields = [
             'search_id', 'corpus_name', 'total_chunks', 
-            'idiom_pattern', 'is_completed', 'failed_chunks', 
+            'idiom', 'custom_regex', 'is_completed', 'failed_chunks', 
             'completed_chunks', 'total_matches', 'created_at',
             'progress',
         ]

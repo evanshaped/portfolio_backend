@@ -30,14 +30,8 @@ class IdiomViewSet(viewsets.ModelViewSet):
         random_index = random.randint(0, idiom_count - 1)
         random_idiom = Idiom.objects.all()[random_index]
 
-        language_text = random_idiom.language.name if random_idiom.language else "unknown"
-
-        return Response({
-            "idiomText": random_idiom.text,
-            "languageText": language_text,
-            "definitionText": "Definition not yet implemented",
-            "regexText": random_idiom.regex if random_idiom.regex else "",
-        })
+        serializer = self.get_serializer(random_idiom)
+        return Response(serializer.data)
 
 class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchSession.objects.all().order_by('created_at')

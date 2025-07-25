@@ -36,11 +36,19 @@ class Corpus(models.Model):
     def get_chunks_path(self):
         return os.path.join(settings.CORPUS_DIR, self.chunks_directory)
 
+class CustomRegex(models.Model):
+    regex = models.CharField(max_length=60)
+    language = models.ForeignKey(Language, on_delete=models.SET_DEFAULT, default=get_default_language)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.regex
+
 class SearchSession(models.Model):
     search_id = models.UUIDField(default=uuid.uuid4, unique=True)
     corpus = models.ForeignKey(Corpus, on_delete=models.CASCADE)
-    #idiom = models.ForeignKey(Idiom, on_delete=models.CASCADE)
-    idiom_pattern = models.CharField(max_length=30)
+    idiom = models.ForeignKey(Idiom, null=True, blank=True, on_delete=models.CASCADE)
+    custom_regex = models.ForeignKey(CustomRegex, null=True, blank=True, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
     failed_chunks = models.IntegerField(default=0)
     completed_chunks = models.IntegerField(default=0)
@@ -48,7 +56,15 @@ class SearchSession(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.search_id} ({self.idiom_pattern} in {self.corpus.name})"
+        return f"{self.search_id} ({self.get_regex()} in {self.corpus.name})"
+    
+    def get_regex(self):
+        if self.idiom:
+            return self.idiom.regex
+        elif self.custom_regex:
+            return self.custom_regex.regex
+        else:
+            return None
 
 class SearchFailure(models.Model):
     searchsession = models.ForeignKey(SearchSession, on_delete=models.CASCADE)
