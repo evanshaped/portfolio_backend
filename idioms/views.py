@@ -46,31 +46,43 @@ class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def start_search(request):
-    try:
-        idiom_pattern = request.data.get('idiom_pattern')
-    except KeyError:
-        return Response({'error': 'Pattern required'}, status=400)
-    
-    try:
-        corpus_id = request.data.get('corpus_id')
-    except KeyError:
+    idiom_id = request.data.get('idiom_id')
+    custom_regex_pattern = request.data.get('custom_regex_pattern')
+    if not idiom_id and not custom_regex_pattern:
+        return Response({'error': 'Either idiom_id or custom_regex_pattern required to initiate search'}, status=400)
+    if idiom_id and custom_regex_pattern:
+        return Response({'error': 'Only provide one of either idiom_id or custom_regex_pattern'}, status=400)
+
+    corpus_id = request.data.get('corpus_id')
+    if corpus_id is None:
         return Response({'error': 'Corpus ID required'}, status=400)
-    
     try:
         corpus = Corpus.objects.get(id=corpus_id)
     except Corpus.DoesNotExist:
         return Response({'error': f'Corpus {corpus_id} not found'}, status=400)
-
     try:
         validate_corpus_chunks(corpus)
     except Exception as e:
         return Response({'error': e}, status=400)
     
-    search = SearchSession.objects.create(
-        corpus=corpus, 
-        idiom_pattern=idiom_pattern
-    )
-
+    if idiom_id:
+        try:
+            idiom = Idiom.objects.get(id=idiom_id)
+            search = SearchSession.objects.create(
+                corpus=corpus,
+                idiom=idiom,
+            )
+        except Idiom.DoesNotExist:
+            return Response({'error': f'Idiom {idiom_id} not found'}, status=400)
+    else:
+        custom_regex = CustomRegex.objects.create(
+            regex = custom_regex_pattern,
+        )
+        search = SearchSession.objects.create(
+            corpus=corpus,
+            custom_regex=custom_regex,
+        )
+    
     thread = threading.Thread(
         target=search_corpus_chunks_for_pattern,
         args=(search.search_id,),

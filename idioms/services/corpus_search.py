@@ -5,7 +5,12 @@ from ..models import SearchSession, Corpus, SearchFailure
 def search_corpus_chunks_for_pattern(search_id):
     search = SearchSession.objects.get(search_id=search_id)
     chunks_path = search.corpus.get_chunks_path()
-    idiom_pattern = search.idiom_pattern
+    regex_pattern = search.get_regex()
+    if not regex_pattern:
+        raise Exception("No regex pattern found for search")
+    if len(regex_pattern) < 10:
+        raise Exception("Regex too short")
+    # TODO: mark SearchSession as 'failed permanently' and have client stop polling if it sees this
 
     for chunk_file_name in os.listdir(chunks_path):
         try:
@@ -16,7 +21,7 @@ def search_corpus_chunks_for_pattern(search_id):
             lines = content.split('\n')
             del content
             for line_num, line in enumerate(lines):
-                matches = re.findall(idiom_pattern, line)
+                matches = re.findall(regex_pattern, line)
                 chunk_matches += len(matches)
             del lines
             search.completed_chunks += 1
