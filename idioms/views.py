@@ -50,6 +50,10 @@ class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchFailure.objects.all().order_by('created_at')
     serializer_class = SearchFailureSerializer
 
+class CustomRegexViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CustomRegex.objects.all()
+    serializer_class = CustomRegexSerializer
+
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def start_search(request):

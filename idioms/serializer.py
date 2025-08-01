@@ -45,6 +45,12 @@ class SearchFailureSerializer(serializers.ModelSerializer):
         model = SearchFailure
         fields = ['search_id', 'corpus_name', 'idiom_pattern', 'chunk_name', 'failure_message', 'created_at']
 
+class CustomRegexSerializer(serializers.ModelSerializer):
+    language_name = serializers.CharField(source='language.name', read_only=True)
+    class Meta:
+        model = CustomRegex
+        fields = ['regex', 'language_name', 'created_at']
+
 class RegexMatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = RegexMatch
