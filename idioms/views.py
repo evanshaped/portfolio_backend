@@ -39,6 +39,13 @@ class SearchSessionViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'search_id'
     lookup_url_kwarg = 'search_id'
 
+    @action(detail=True, methods=['get'])
+    def matches(self, request, *args, **kwargs):
+        search_session = self.get_object()
+        matches = RegexMatch.objects.filter(searchsession=search_session)
+        serializer = RegexMatchSerializer(matches, many=True)
+        return Response(serializer.data)
+
 class SearchFailureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SearchFailure.objects.all().order_by('created_at')
     serializer_class = SearchFailureSerializer

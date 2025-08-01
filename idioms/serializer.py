@@ -44,3 +44,8 @@ class SearchFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchFailure
         fields = ['search_id', 'corpus_name', 'idiom_pattern', 'chunk_name', 'failure_message', 'created_at']
+
+class RegexMatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegexMatch
+        fields = ['searchsession', 'context_before', 'match_text', 'context_after']
