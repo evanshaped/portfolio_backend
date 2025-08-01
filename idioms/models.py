@@ -74,3 +74,9 @@ class SearchFailure(models.Model):
 
     def __str__(self):
         return f"Corpus {self.searchsession.corpus.name}, chunk {self.chunk_name}"
+
+class RegexMatch(models.Model):
+    searchsession = models.ForeignKey(SearchSession, on_delete=models.CASCADE)
+    context_before = models.CharField(max_length=127)
+    match_text = models.CharField(max_length=63)
+    context_after = models.CharField(max_length=127)
