@@ -14,6 +14,9 @@ def search_corpus_chunks_for_pattern(search_id, context_radius_ideal=63):
         raise
 
 def search_corpus_chunks_for_pattern_aux(search: SearchSession, context_radius_ideal):
+    # When running the following lines, I get "AttributeError: 'DeferredAttribute' object has no attribute 'max_length'"
+    # Maybe there is a different way to programmatically identify these values from the models or database,
+    # but its not a priority. For now I'm setting them manually
     # context_radius_max = min(RegexMatch.context_before.max_length, RegexMatch.context_after.max_length)
     # match_text_length_max = RegexMatch.match_text.max_length
     context_radius_max = 127
@@ -34,12 +37,12 @@ def search_corpus_chunks_for_pattern_aux(search: SearchSession, context_radius_i
         text_match = line[match.start():match.end()]
         text_after = line[match.end():min(len(line),match.end()+context_radius)]
         print(f"\t{text_before}{text_match}{text_after}")
-        # RegexMatch.objects.create(
-        #     searchsession=search,
-        #     context_before=text_before,
-        #     match_text=text_match,
-        #     context_after=text_after
-        # )
+        RegexMatch.objects.create(
+            searchsession=search,
+            context_before=text_before,
+            match_text=text_match,
+            context_after=text_after
+        )
 
     def match_regex_in_line(line):
         matches = re.finditer(regex_pattern, line)
