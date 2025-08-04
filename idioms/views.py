@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes, throttle_classes
 from rest_framework.response import Response
 from .services.corpus_validation import validate_corpus_chunks
 from .services.corpus_search import search_corpus_chunks_for_pattern
@@ -8,6 +8,7 @@ from .models import *
 from .serializer import *
 import random
 import threading
+from idioms.throttles import *
 
 class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all().order_by('name')
@@ -21,7 +22,7 @@ class IdiomViewSet(viewsets.ModelViewSet):
     queryset = Idiom.objects.all().order_by('text')
     serializer_class = IdiomSerializer
 
-    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['get'], permission_classes=[permissions.AllowAny], throttle_classes=[RandomIdiomAnonRateThrottle])
     def random(self, request):
         idiom_count = Idiom.objects.count()
         if idiom_count == 0:
@@ -68,6 +69,7 @@ class CustomRegexViewSet(viewsets.ReadOnlyModelViewSet):
 
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
+@throttle_classes([StartSearchBurstAnonRateThrottle, StartSearchSustainedAnonRateThrottle])
 def start_search(request):
     idiom_id = request.data.get('idiom_id')
     custom_regex_pattern = request.data.get('custom_regex_pattern')
@@ -117,6 +119,7 @@ def start_search(request):
 
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
+@throttle_classes([BulkMatchesBurstAnonRateThrottle])
 def bulk_matches(request):
     match_ids = request.data.get('match_ids')
 

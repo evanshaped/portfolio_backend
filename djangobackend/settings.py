@@ -21,6 +21,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    'CACHES': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',   # Used by throttle
+    },
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/second',
+    }
 }
 
 # Quick-start development settings - unsuitable for production
