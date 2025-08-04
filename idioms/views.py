@@ -96,7 +96,7 @@ def start_search(request):
     
     thread = threading.Thread(
         target=search_corpus_chunks_for_pattern,
-        args=(search.search_id,),
+        args=(search.search_id,127),
     )
     thread.daemon = True
     thread.start()
