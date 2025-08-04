@@ -36,7 +36,6 @@ def search_corpus_chunks_for_pattern_aux(search: SearchSession, context_radius_i
         text_before = line[max(0,match.start()-context_radius):match.start()]
         text_match = line[match.start():match.end()]
         text_after = line[match.end():min(len(line),match.end()+context_radius)]
-        print(f"\t{text_before}{text_match}{text_after}")
         RegexMatch.objects.create(
             searchsession=search,
             context_before=text_before,
