@@ -1,13 +1,13 @@
 from rest_framework.throttling import AnonRateThrottle
 
 class StartSearchBurstAnonRateThrottle(AnonRateThrottle):
-    rate = '2/minute'
+    rate = '10/minute'
 
 class StartSearchSustainedAnonRateThrottle(AnonRateThrottle):
-    rate = '20/day'
+    rate = '100/day'
 
 class BulkMatchesBurstAnonRateThrottle(AnonRateThrottle):
-    rate = '4/second'
+    rate = '8/second'
 
 class RandomIdiomAnonRateThrottle(AnonRateThrottle):
-    rate = '2/minute'
+    rate = '20/minute'
