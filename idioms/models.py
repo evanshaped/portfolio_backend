@@ -53,6 +53,8 @@ class SearchSession(models.Model):
     failed_chunks = models.IntegerField(default=0)
     completed_chunks = models.IntegerField(default=0)
     total_matches = models.IntegerField(default=0)
+    p_hat = models.FloatField(null=True, blank=True)
+    p_hat_sigma = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
