@@ -4,6 +4,8 @@ import os
 def validate_corpus_chunks(corpus: Corpus, size_tolerance = 0.01):
     chunks_path = corpus.get_chunks_path()
     total_chunks = corpus.total_chunks
+    if total_chunks == 0:
+        raise Exception(f"Error validating corpus. Corpus must have more than 0 chunks")
     max_chunk_size_mb = corpus.chunk_size_mb * (1 + size_tolerance)
     if not os.path.exists(chunks_path):
         raise Exception(f"Error validating corpus chunks. Directory {chunks_path} does not exist")

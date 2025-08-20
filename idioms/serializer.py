@@ -24,17 +24,20 @@ class IdiomSerializer(serializers.ModelSerializer):
 
 class SearchSessionSerializer(serializers.ModelSerializer):
     corpus_name = serializers.CharField(source='corpus.name', read_only=True)
+    corpus_total_word_count = serializers.IntegerField(source='corpus.total_word_count', read_only=True)
     total_chunks = serializers.CharField(source='corpus.total_chunks', read_only=True)
     progress = serializers.SerializerMethodField()
     def get_progress(self, obj):
+        if obj.corpus.total_chunks == 0: return 0
         return ((obj.completed_chunks + obj.failed_chunks) / obj.corpus.total_chunks)
     class Meta:
         model = SearchSession
         fields = [
             'search_id', 'corpus_name', 'total_chunks', 
-            'idiom_pattern', 'is_completed', 'failed_chunks', 
+            'idiom', 'custom_regex', 'is_completed', 'failed_chunks', 
             'completed_chunks', 'total_matches', 'created_at',
-            'progress',
+            'p_hat', 'p_hat_sigma',
+            'progress', 'corpus_total_word_count',
         ]
 
 class SearchFailureSerializer(serializers.ModelSerializer):
@@ -44,3 +47,14 @@ class SearchFailureSerializer(serializers.ModelSerializer):
     class Meta:
         model = SearchFailure
         fields = ['search_id', 'corpus_name', 'idiom_pattern', 'chunk_name', 'failure_message', 'created_at']
+
+class CustomRegexSerializer(serializers.ModelSerializer):
+    language_name = serializers.CharField(source='language.name', read_only=True)
+    class Meta:
+        model = CustomRegex
+        fields = ['regex', 'language_name', 'created_at']
+
+class RegexMatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RegexMatch
+        fields = ['searchsession', 'context_before', 'match_text', 'context_after']
