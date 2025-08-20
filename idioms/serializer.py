@@ -27,26 +27,17 @@ class SearchSessionSerializer(serializers.ModelSerializer):
     corpus_total_word_count = serializers.IntegerField(source='corpus.total_word_count', read_only=True)
     total_chunks = serializers.CharField(source='corpus.total_chunks', read_only=True)
     progress = serializers.SerializerMethodField()
-    corpus_words_processed = serializers.SerializerMethodField()
-    frequency = serializers.SerializerMethodField()
     def get_progress(self, obj):
         if obj.corpus.total_chunks == 0: return 0
         return ((obj.completed_chunks + obj.failed_chunks) / obj.corpus.total_chunks)
-    def get_corpus_words_processed(self, obj):
-        if obj.corpus.total_chunks == 0: return 0
-        return round((obj.completed_chunks / obj.corpus.total_chunks) * obj.corpus.total_word_count)
-    def get_frequency(self, obj):
-        words_processed = self.get_corpus_words_processed(obj)
-        if words_processed == 0: return 0.0000
-        return round(obj.total_matches / words_processed * 10000, 4)
     class Meta:
         model = SearchSession
         fields = [
             'search_id', 'corpus_name', 'total_chunks', 
             'idiom', 'custom_regex', 'is_completed', 'failed_chunks', 
             'completed_chunks', 'total_matches', 'created_at',
-            'progress', 'corpus_total_word_count', 'corpus_words_processed',
-            'frequency',
+            'p_hat', 'p_hat_sigma',
+            'progress', 'corpus_total_word_count',
         ]
 
 class SearchFailureSerializer(serializers.ModelSerializer):
