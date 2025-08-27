@@ -37,7 +37,7 @@ class Corpus(models.Model):
         return os.path.join(settings.CORPUS_DIR, self.chunks_directory)
 
 class CustomRegex(models.Model):
-    regex = models.CharField(max_length=60)
+    regex = models.CharField(max_length=127)
     language = models.ForeignKey(Language, on_delete=models.SET_DEFAULT, default=get_default_language)
     created_at = models.DateTimeField(auto_now_add=True)
 
